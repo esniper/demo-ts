@@ -65,7 +65,7 @@ function DesignA() {
 // Design B - Modern Layout
 function DesignB() {
   return (
-    <div className="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/30 dark:to-indigo-900/30 rounded-lg shadow-sm border border-blue-200 dark:border-blue-700 p-6">
+    <div className="bg-blue-50 dark:bg-blue-900/30 rounded-lg shadow-sm border border-blue-200 dark:border-blue-700 p-6">
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Modern Layout</h3>
       <div className="space-y-4">
         <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur h-32 rounded-lg flex items-center justify-center shadow-sm">
@@ -81,8 +81,8 @@ function DesignB() {
             <span className="text-gray-700 dark:text-gray-300">Feature with Icon</span>
           </div>
         </div>
-        <button className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-500 dark:to-indigo-500 text-white py-3 rounded-lg hover:from-blue-700 hover:to-indigo-700 dark:hover:from-blue-600 dark:hover:to-indigo-600 transition-all shadow-lg">
-          Modern CTA with Gradient
+        <button className="w-full bg-blue-600 dark:bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-all shadow-lg">
+          Modern CTA Button
         </button>
       </div>
     </div>
