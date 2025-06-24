@@ -165,6 +165,16 @@ export default function RolloutDemo() {
                 return { userId, isEnabled: false };
               }
               
+              if (response.status === 404) {
+                setRateLimitWarning(`Flag '${flagKey}' not found. Create it in your dashboard to see the rollout visualization.`);
+                return { userId, isEnabled: false };
+              }
+              
+              if (!response.ok) {
+                console.error(`HTTP error! status: ${response.status}`);
+                return { userId, isEnabled: false };
+              }
+              
               const data = await response.json();
               return { userId, isEnabled: data.enabled };
             } catch (error) {
