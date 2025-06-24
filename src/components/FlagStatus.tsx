@@ -47,12 +47,8 @@ export function FlagStatus({ flagKey, showDetails = false, defaultValue = false 
 
     checkFlag();
 
-    // Poll for updates every 5 seconds
-    const interval = setInterval(checkFlag, 5000);
-
     return () => {
       mounted = false;
-      clearInterval(interval);
     };
   }, [sdk, flagKey, defaultValue]);
 

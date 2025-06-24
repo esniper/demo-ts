@@ -107,10 +107,6 @@ export default function ABTestingDemo() {
     };
 
     checkFlag();
-    // Check every 5 seconds for demo purposes
-    const interval = setInterval(checkFlag, 5000);
-    
-    return () => clearInterval(interval);
   }, [sdk]);
 
   return (

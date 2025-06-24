@@ -186,9 +186,6 @@ export default function UseCasesDemo() {
     };
 
     checkFlags();
-    const interval = setInterval(checkFlags, 5000); // Check every 5 seconds
-    
-    return () => clearInterval(interval);
   }, [sdk]);
 
   const getUseCaseContent = (useCase: UseCaseDemo) => {

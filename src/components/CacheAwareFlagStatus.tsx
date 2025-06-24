@@ -47,11 +47,6 @@ export function CacheAwareFlagStatus({ flagKey, cached = true, showDetails = fal
 
   useEffect(() => {
     checkFlag();
-    
-    // Set up different polling intervals based on cache strategy
-    const interval = setInterval(checkFlag, cached ? 30000 : 5000); // 30s for cached, 5s for real-time
-    
-    return () => clearInterval(interval);
   }, [sdk, flagKey, cached]);
 
   if (!sdk) {

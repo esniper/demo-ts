@@ -79,8 +79,6 @@ export default function CacheDemo() {
 
   useEffect(() => {
     refreshStats();
-    const interval = setInterval(refreshStats, 2000); // Update every 2 seconds
-    return () => clearInterval(interval);
   }, [sdk]);
 
   if (!sdk) {
