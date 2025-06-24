@@ -6,7 +6,7 @@ import { CodeExample } from '@/components/CodeExample';
 import { PerformanceDebugger } from '@/components/PerformanceDebugger';
 import { useFlagVault } from '@/contexts/FlagVaultContext';
 import { usePerformanceMonitor } from '@/hooks/usePerformanceMonitor';
-import { Users, RefreshCw, TrendingUp } from 'lucide-react';
+import { Users, RefreshCw, TrendingUp, AlertTriangle } from 'lucide-react';
 import type { FeatureFlagMetadata } from '@flagvault/sdk';
 
 const rolloutCode = `// Percentage rollout with user context
@@ -40,34 +40,44 @@ const userA = await sdk.isEnabled('feature', false, 'user-a');
 const userB = await sdk.isEnabled('feature', false, 'user-b');
 // userA and userB may be different`;
 
-// Generate 10,000 consistent user IDs
+// Generate 900 consistent user IDs (30x30 grid)
 const generateUsers = () => {
-  return Array.from({ length: 10000 }, (_, i) => `user-${i.toString().padStart(5, '0')}`);
+  return Array.from({ length: 900 }, (_, i) => `user-${i.toString().padStart(4, '0')}`);
 };
 
 interface UserGridProps {
   users: string[];
   enabledUsers: Set<string>;
   isLoading: boolean;
+  progress: number;
 }
 
-function UserGrid({ users, enabledUsers, isLoading }: UserGridProps) {
+function UserGrid({ users, enabledUsers, isLoading, progress }: UserGridProps) {
   return (
     <div className="relative">
       {isLoading && (
         <div className="absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center z-10">
-          <div className="flex items-center space-x-2">
-            <RefreshCw className="h-5 w-5 animate-spin text-blue-600" />
-            <span className="text-sm text-gray-600">Updating rollout...</span>
+          <div className="text-center">
+            <div className="flex items-center justify-center space-x-2 mb-2">
+              <RefreshCw className="h-5 w-5 animate-spin text-blue-600" />
+              <span className="text-sm text-gray-600">Checking users...</span>
+            </div>
+            <div className="w-48 bg-gray-200 rounded-full h-2">
+              <div 
+                className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+            <p className="text-xs text-gray-500 mt-1">{progress}% complete</p>
           </div>
         </div>
       )}
       
-      <div className="grid grid-cols-100 gap-0 p-4 bg-gray-50 rounded-lg overflow-hidden">
+      <div className="grid grid-cols-30 gap-0 p-4 bg-gray-50 rounded-lg overflow-hidden">
         {users.map((userId) => (
           <div
             key={userId}
-            className={`w-1 h-1 ${
+            className={`w-2 h-2 ${
               enabledUsers.has(userId) 
                 ? 'bg-green-500' 
                 : 'bg-gray-300'
@@ -101,6 +111,8 @@ export default function RolloutDemo() {
   const [isLoading, setIsLoading] = useState(false);
   const [flagKey, setFlagKey] = useState('rollout-demo');
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
+  const [progress, setProgress] = useState(0);
+  const [rateLimitWarning, setRateLimitWarning] = useState<string | null>(null);
 
   // Generate consistent user IDs
   const users = useMemo(() => generateUsers(), []);
@@ -109,33 +121,64 @@ export default function RolloutDemo() {
     if (!sdk) return;
     
     setIsLoading(true);
+    setProgress(0);
+    setRateLimitWarning(null);
     
     try {
-      // Process users in batches to respect backend limits
-      const batchSize = 25; // Conservative batch size
+      // Process users in smaller batches to respect rate limits
+      const batchSize = 10; // Smaller batch size
       const results: { userId: string; isEnabled: boolean }[] = [];
+      let rateLimitHit = false;
       
       for (let i = 0; i < users.length; i += batchSize) {
         const batch = users.slice(i, i + batchSize);
         const batchResults = await Promise.all(
           batch.map(async (userId) => {
             try {
-              const isEnabled = await measureAsync(
-                `isEnabled-${userId}`,
-                () => sdk.isEnabled(flagKey, false, userId)
+              const response = await fetch(
+                `${process.env.NEXT_PUBLIC_FLAGVAULT_BASE_URL}/api/feature-flag/${flagKey}/enabled?context=${userId}`,
+                {
+                  headers: {
+                    'X-API-Key': process.env.NEXT_PUBLIC_FLAGVAULT_TEST_API_KEY!,
+                    'X-Environment': 'test',
+                  },
+                }
               );
-              return { userId, isEnabled };
+              
+              // Check rate limit headers
+              const remaining = response.headers.get('X-RateLimit-Remaining');
+              if (remaining && parseInt(remaining) < 50) {
+                setRateLimitWarning(`Approaching rate limit: ${remaining} requests remaining`);
+              }
+              
+              if (response.status === 429) {
+                rateLimitHit = true;
+                setRateLimitWarning('Rate limit exceeded. Showing partial results.');
+                return { userId, isEnabled: false };
+              }
+              
+              const data = await response.json();
+              return { userId, isEnabled: data.enabled };
             } catch (error) {
-              // If individual request fails, default to false
+              console.error(`Error checking flag for ${userId}:`, error);
               return { userId, isEnabled: false };
             }
           })
         );
+        
         results.push(...batchResults);
         
-        // Brief pause between batches (50ms)
+        // Update progress
+        setProgress(Math.round((results.length / users.length) * 100));
+        
+        // Stop if rate limit hit
+        if (rateLimitHit) {
+          break;
+        }
+        
+        // Longer pause between batches to avoid rate limits
         if (i + batchSize < users.length) {
-          await new Promise(resolve => setTimeout(resolve, 50));
+          await new Promise(resolve => setTimeout(resolve, 100));
         }
       }
       
@@ -150,16 +193,17 @@ export default function RolloutDemo() {
       setLastUpdate(new Date());
     } catch (error) {
       console.error('Error checking rollout:', error);
+      setRateLimitWarning('Error occurred while checking flags');
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Auto-refresh every 10 seconds
+  // Only check on mount and when flag key changes
   useEffect(() => {
-    checkRollout();
-    const interval = setInterval(checkRollout, 10000);
-    return () => clearInterval(interval);
+    if (sdk && flagKey) {
+      checkRollout();
+    }
   }, [sdk, flagKey]);
 
   const enabledCount = enabledUsers.size;
@@ -170,7 +214,7 @@ export default function RolloutDemo() {
       <div>
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Percentage Rollout</h1>
         <p className="text-lg text-gray-600">
-          Visualize how percentage rollouts affect 10,000 simulated users
+          Visualize how percentage rollouts affect 900 simulated users
         </p>
       </div>
 
@@ -182,8 +226,8 @@ export default function RolloutDemo() {
 
       <FeatureDemo
         title="Rollout Visualization"
-        description="10,000 users in a 100x100 grid showing rollout distribution"
-        info="Change the rollout percentage in your dashboard to see the effect on user distribution"
+        description="900 users in a 30x30 grid showing rollout distribution"
+        info="This demo respects API rate limits (1,000 requests/minute). Manual refresh is recommended to avoid hitting limits."
       >
         <div className="space-y-6">
           <div className="flex items-center justify-between">
@@ -249,10 +293,18 @@ export default function RolloutDemo() {
             </div>
           </div>
 
+          {rateLimitWarning && (
+            <div className="flex items-center space-x-2 p-3 bg-yellow-50 text-yellow-800 rounded-lg">
+              <AlertTriangle className="h-5 w-5 flex-shrink-0" />
+              <span className="text-sm">{rateLimitWarning}</span>
+            </div>
+          )}
+
           <UserGrid 
             users={users} 
             enabledUsers={enabledUsers} 
             isLoading={isLoading}
+            progress={progress}
           />
         </div>
       </FeatureDemo>
