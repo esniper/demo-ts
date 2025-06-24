@@ -21,16 +21,16 @@ export function CodeExample({ code, language = 'typescript', title }: CodeExampl
   };
 
   return (
-    <div className="rounded-lg border border-gray-200 overflow-hidden">
+    <div className="rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
       {title && (
-        <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
-          <h3 className="text-sm font-medium text-gray-700">{title}</h3>
+        <div className="bg-gray-100 dark:bg-gray-700 px-4 py-2.5 border-b border-gray-200 dark:border-gray-600">
+          <h3 className="text-sm font-medium text-gray-800 dark:text-gray-200">{title}</h3>
         </div>
       )}
       <div className="relative">
         <button
           onClick={handleCopy}
-          className="absolute top-2 right-2 p-2 bg-gray-800 hover:bg-gray-700 rounded-md transition-colors z-10"
+          className="absolute top-2 right-2 p-2 bg-gray-800 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600 rounded-md transition-colors z-10"
           aria-label="Copy code"
         >
           {copied ? (

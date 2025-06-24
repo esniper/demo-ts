@@ -31,23 +31,23 @@ export function PerformanceDebugger({ metrics, stats, onClearMetrics }: Performa
   const recentMetrics = metrics.slice(-10).reverse();
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
+    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
       <div 
-        className="p-3 border-b border-gray-200 cursor-pointer hover:bg-gray-50"
+        className="p-3 border-b border-gray-200 dark:border-gray-700 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700"
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Activity className="h-4 w-4 text-blue-600" />
-            <span className="text-sm font-medium text-gray-900">Performance Monitor</span>
+            <Activity className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+            <span className="text-sm font-medium text-gray-900 dark:text-white">Performance Monitor</span>
             {stats.slowOperations > 0 && (
-              <div className="flex items-center space-x-1 text-orange-600">
+              <div className="flex items-center space-x-1 text-orange-600 dark:text-orange-400">
                 <AlertTriangle className="h-3 w-3" />
                 <span className="text-xs">{stats.slowOperations} slow</span>
               </div>
             )}
           </div>
-          <div className="flex items-center space-x-4 text-xs text-gray-600">
+          <div className="flex items-center space-x-4 text-xs text-gray-600 dark:text-gray-400">
             <span>{stats.totalOperations} ops</span>
             <span>{stats.averageDuration.toFixed(0)}ms avg</span>
             <span className={isExpanded ? 'rotate-180' : ''}>⌄</span>

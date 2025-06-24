@@ -119,36 +119,36 @@ export default function ErrorsDemo() {
       title: 'Network Error',
       description: 'Simulate connection failure',
       icon: Wifi,
-      color: 'text-red-600 bg-red-50'
+      color: 'text-red-600 bg-red-50 dark:bg-red-900/30 dark:text-red-400'
     },
     {
       type: 'auth' as const,
       title: 'Authentication Error',
       description: 'Invalid API credentials',
       icon: Key,
-      color: 'text-yellow-600 bg-yellow-50'
+      color: 'text-yellow-600 bg-yellow-50 dark:bg-yellow-900/30 dark:text-yellow-400'
     },
     {
       type: 'notfound' as const,
       title: 'Flag Not Found',
       description: 'Non-existent flag key',
       icon: AlertTriangle,
-      color: 'text-orange-600 bg-orange-50'
+      color: 'text-orange-600 bg-orange-50 dark:bg-orange-900/30 dark:text-orange-400'
     },
     {
       type: 'server' as const,
       title: 'Server Error',
       description: 'API server error (500)',
       icon: Server,
-      color: 'text-purple-600 bg-purple-50'
+      color: 'text-purple-600 bg-purple-50 dark:bg-purple-900/30 dark:text-purple-400'
     }
   ];
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Error Handling</h1>
-        <p className="text-lg text-gray-600">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Error Handling</h1>
+        <p className="text-lg text-gray-600 dark:text-gray-300">
           Learn how FlagVault SDK handles errors gracefully and provides fallback mechanisms
         </p>
       </div>
@@ -167,13 +167,13 @@ export default function ErrorsDemo() {
                   key={errorType.type}
                   onClick={() => simulateError(errorType.type)}
                   disabled={!sdk}
-                  className="p-3 border border-gray-200 rounded-lg hover:bg-gray-50 disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors"
+                  className="p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:cursor-not-allowed transition-colors"
                 >
                   <div className={`p-2 rounded-lg ${errorType.color} mb-2`}>
                     <Icon className="h-5 w-5 mx-auto" />
                   </div>
-                  <h4 className="text-sm font-medium text-gray-900 mb-1">{errorType.title}</h4>
-                  <p className="text-xs text-gray-600">{errorType.description}</p>
+                  <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-1">{errorType.title}</h4>
+                  <p className="text-xs text-gray-600 dark:text-gray-300">{errorType.description}</p>
                 </button>
               );
             })}
@@ -182,30 +182,30 @@ export default function ErrorsDemo() {
           {simulations.length > 0 && (
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <h4 className="font-medium text-gray-900">Error Simulation Results</h4>
+                <h4 className="font-medium text-gray-900 dark:text-white">Error Simulation Results</h4>
                 <button
                   onClick={clearSimulations}
-                  className="text-sm text-gray-500 hover:text-gray-700"
+                  className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                 >
                   Clear All
                 </button>
               </div>
               
               {simulations.map((sim, index) => (
-                <div key={index} className="p-3 bg-gray-50 rounded-lg">
+                <div key={index} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
-                      <span className="text-sm font-medium text-gray-900">
+                      <span className="text-sm font-medium text-gray-900 dark:text-white">
                         {sim.type.toUpperCase()} Error
                       </span>
-                      <code className="text-xs bg-white px-2 py-1 rounded">
+                      <code className="text-xs bg-white dark:bg-gray-700 dark:text-gray-300 px-2 py-1 rounded">
                         {sim.flagKey}
                       </code>
                     </div>
                     {sim.isLoading && <RefreshCw className="h-4 w-4 animate-spin text-gray-400" />}
                   </div>
                   {sim.result && (
-                    <p className="text-sm text-gray-600 mt-1">{sim.result}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">{sim.result}</p>
                   )}
                 </div>
               ))}
@@ -220,63 +220,63 @@ export default function ErrorsDemo() {
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-4">
-            <h4 className="font-medium text-gray-900">Automatic Handling</h4>
+            <h4 className="font-medium text-gray-900 dark:text-white">Automatic Handling</h4>
             <div className="space-y-3 text-sm">
               <div className="flex items-start space-x-3">
                 <Wifi className="h-5 w-5 text-red-500 mt-0.5 flex-shrink-0" />
                 <div>
-                  <p className="font-medium text-gray-900">Network Errors</p>
-                  <p className="text-gray-600">Connection timeouts, DNS failures → Returns default value</p>
+                  <p className="font-medium text-gray-900 dark:text-white">Network Errors</p>
+                  <p className="text-gray-600 dark:text-gray-300">Connection timeouts, DNS failures → Returns default value</p>
                 </div>
               </div>
               
               <div className="flex items-start space-x-3">
                 <Key className="h-5 w-5 text-yellow-500 mt-0.5 flex-shrink-0" />
                 <div>
-                  <p className="font-medium text-gray-900">Authentication Errors</p>
-                  <p className="text-gray-600">Invalid API keys, forbidden access → Returns default value</p>
+                  <p className="font-medium text-gray-900 dark:text-white">Authentication Errors</p>
+                  <p className="text-gray-600 dark:text-gray-300">Invalid API keys, forbidden access → Returns default value</p>
                 </div>
               </div>
               
               <div className="flex items-start space-x-3">
                 <AlertTriangle className="h-5 w-5 text-orange-500 mt-0.5 flex-shrink-0" />
                 <div>
-                  <p className="font-medium text-gray-900">Missing Flags</p>
-                  <p className="text-gray-600">Flag doesn't exist in dashboard → Returns default value</p>
+                  <p className="font-medium text-gray-900 dark:text-white">Missing Flags</p>
+                  <p className="text-gray-600 dark:text-gray-300">Flag doesn't exist in dashboard → Returns default value</p>
                 </div>
               </div>
               
               <div className="flex items-start space-x-3">
                 <Server className="h-5 w-5 text-purple-500 mt-0.5 flex-shrink-0" />
                 <div>
-                  <p className="font-medium text-gray-900">Server Errors</p>
-                  <p className="text-gray-600">API downtime, 500 errors → Returns default value</p>
+                  <p className="font-medium text-gray-900 dark:text-white">Server Errors</p>
+                  <p className="text-gray-600 dark:text-gray-300">API downtime, 500 errors → Returns default value</p>
                 </div>
               </div>
             </div>
           </div>
           
           <div className="space-y-4">
-            <h4 className="font-medium text-gray-900">Exception Types</h4>
+            <h4 className="font-medium text-gray-900 dark:text-white">Exception Types</h4>
             <div className="space-y-3 text-sm">
-              <div className="p-3 bg-red-50 rounded">
-                <p className="font-medium text-red-800">FlagVaultAuthenticationError</p>
-                <p className="text-red-600">401/403 HTTP responses</p>
+              <div className="p-3 bg-red-50 dark:bg-red-900/30 rounded">
+                <p className="font-medium text-red-800 dark:text-red-300">FlagVaultAuthenticationError</p>
+                <p className="text-red-600 dark:text-red-400">401/403 HTTP responses</p>
               </div>
               
-              <div className="p-3 bg-yellow-50 rounded">
-                <p className="font-medium text-yellow-800">FlagVaultNetworkError</p>
-                <p className="text-yellow-600">Connection failures, timeouts</p>
+              <div className="p-3 bg-yellow-50 dark:bg-yellow-900/30 rounded">
+                <p className="font-medium text-yellow-800 dark:text-yellow-300">FlagVaultNetworkError</p>
+                <p className="text-yellow-600 dark:text-yellow-400">Connection failures, timeouts</p>
               </div>
               
-              <div className="p-3 bg-blue-50 rounded">
-                <p className="font-medium text-blue-800">FlagVaultAPIError</p>
-                <p className="text-blue-600">Server errors, malformed responses</p>
+              <div className="p-3 bg-blue-50 dark:bg-blue-900/30 rounded">
+                <p className="font-medium text-blue-800 dark:text-blue-300">FlagVaultAPIError</p>
+                <p className="text-blue-600 dark:text-blue-400">Server errors, malformed responses</p>
               </div>
               
-              <div className="p-3 bg-gray-50 rounded">
-                <p className="font-medium text-gray-800">Error</p>
-                <p className="text-gray-600">Invalid parameters (empty flag key)</p>
+              <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded">
+                <p className="font-medium text-gray-800 dark:text-gray-200">Error</p>
+                <p className="text-gray-600 dark:text-gray-300">Invalid parameters (empty flag key)</p>
               </div>
             </div>
           </div>
@@ -312,8 +312,8 @@ export default function ErrorsDemo() {
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-3">
-            <h4 className="font-medium text-gray-900">✅ Do</h4>
-            <ul className="space-y-2 text-sm text-gray-600">
+            <h4 className="font-medium text-gray-900 dark:text-white">✅ Do</h4>
+            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
               <li className="flex items-start">
                 <span className="text-green-600 mr-2">•</span>
                 Always provide meaningful default values
@@ -333,8 +333,8 @@ export default function ErrorsDemo() {
             </ul>
           </div>
           <div className="space-y-3">
-            <h4 className="font-medium text-gray-900">❌ Don't</h4>
-            <ul className="space-y-2 text-sm text-gray-600">
+            <h4 className="font-medium text-gray-900 dark:text-white">❌ Don't</h4>
+            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
               <li className="flex items-start">
                 <span className="text-red-600 mr-2">•</span>
                 Assume flags will always be available

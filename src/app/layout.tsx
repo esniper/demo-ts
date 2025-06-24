@@ -26,21 +26,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 dark:bg-gray-900`}
       >
         <FlagVaultProvider>
           <div className="flex h-screen">
             <Navigation />
             <div className="flex-1 flex flex-col overflow-hidden">
-              <header className="bg-white border-b border-gray-200 px-6 py-4">
+              <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
                 <div className="flex items-center justify-between">
-                  <h1 className="text-2xl font-semibold text-gray-900">FlagVault SDK Demo</h1>
+                  <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">FlagVault SDK Demo</h1>
                   <EnvironmentSwitcher />
                 </div>
               </header>
-              <main className="flex-1 overflow-y-auto p-6">
+              <main className="flex-1 overflow-y-auto p-6 bg-gray-50 dark:bg-gray-900">
                 {children}
               </main>
             </div>

@@ -21,19 +21,19 @@ const navItems = [
   { href: '/demo/ab-testing', label: 'A/B Testing', icon: GitBranch },
   { href: '/demo/rollout', label: 'Percentage Rollout', icon: TrendingUp },
   { href: '/demo/hooks', label: 'React Hooks', icon: Code2 },
-  { href: '/demo/cache', label: 'Cache Management', icon: Database },
   { href: '/demo/errors', label: 'Error Handling', icon: AlertTriangle },
-  { href: '/demo/performance', label: 'Performance', icon: Zap },
-  { href: '/demo/use-cases', label: 'Use Cases', icon: Grid },
+  // { href: '/demo/cache', label: 'Cache Management', icon: Database },
+  // { href: '/demo/performance', label: 'Performance', icon: Zap },
+  // { href: '/demo/use-cases', label: 'Use Cases', icon: Grid },
 ];
 
 export function Navigation() {
   const pathname = usePathname();
 
   return (
-    <nav className="w-64 bg-gray-50 border-r border-gray-200 min-h-screen">
+    <nav className="w-64 bg-gray-50 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 min-h-screen">
       <div className="p-4">
-        <h1 className="text-xl font-bold text-gray-900 mb-8">FlagVault Demo</h1>
+        <h1 className="text-xl font-bold text-gray-900 dark:text-white mb-8">FlagVault Demo</h1>
         <ul className="space-y-1">
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -45,8 +45,8 @@ export function Navigation() {
                   href={item.href}
                   className={`flex items-center space-x-3 px-3 py-2 rounded-md transition-colors ${
                     isActive
-                      ? 'bg-blue-50 text-blue-700'
-                      : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                      ? 'bg-blue-50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300'
+                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
                   }`}
                 >
                   <Icon className="h-5 w-5" />

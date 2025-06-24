@@ -56,25 +56,25 @@ function UserGrid({ users, enabledUsers, isLoading, progress }: UserGridProps) {
   return (
     <div className="relative">
       {isLoading && (
-        <div className="absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center z-10">
+        <div className="absolute inset-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm flex items-center justify-center z-10">
           <div className="text-center">
             <div className="flex items-center justify-center space-x-2 mb-2">
-              <RefreshCw className="h-5 w-5 animate-spin text-blue-600" />
-              <span className="text-sm text-gray-600">Checking users...</span>
+              <RefreshCw className="h-5 w-5 animate-spin text-blue-600 dark:text-blue-400" />
+              <span className="text-sm text-gray-600 dark:text-gray-300">Checking users...</span>
             </div>
-            <div className="w-48 bg-gray-200 rounded-full h-2">
+            <div className="w-48 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
               <div 
-                className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                className="bg-blue-600 dark:bg-blue-500 h-2 rounded-full transition-all duration-300"
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <p className="text-xs text-gray-500 mt-1">{progress}% complete</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{progress}% complete</p>
           </div>
         </div>
       )}
       
       <div 
-        className="grid gap-0.5 p-4 bg-gray-50 rounded-lg overflow-hidden"
+        className="grid gap-0.5 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden"
         style={{ 
           display: 'grid',
           gridTemplateColumns: 'repeat(30, minmax(0, 1fr))',
@@ -87,8 +87,8 @@ function UserGrid({ users, enabledUsers, isLoading, progress }: UserGridProps) {
             key={userId}
             className={`w-3 h-3 rounded-sm ${
               enabledUsers.has(userId) 
-                ? 'bg-green-500' 
-                : 'bg-gray-300'
+                ? 'bg-green-500 dark:bg-green-400' 
+                : 'bg-gray-300 dark:bg-gray-600'
             }`}
             title={`${userId}: ${enabledUsers.has(userId) ? 'Enabled' : 'Disabled'}`}
           />
@@ -143,42 +143,22 @@ export default function RolloutDemo() {
         const batchResults = await Promise.all(
           batch.map(async (userId) => {
             try {
-              const response = await fetch(
-                `${process.env.NEXT_PUBLIC_FLAGVAULT_BASE_URL}/api/feature-flag/${flagKey}/enabled?context=${userId}`,
-                {
-                  headers: {
-                    'X-API-Key': process.env.NEXT_PUBLIC_FLAGVAULT_TEST_API_KEY!,
-                    'X-Environment': 'test',
-                  },
-                }
+              // Use SDK with user context for consistent rollout (no cache for real-time results)
+              const isEnabled = await measureAsync(
+                `flag-check-${userId}`,
+                () => sdk.isEnabled(flagKey, false, userId, { cache: false })
               );
-              
-              // Check rate limit headers
-              const remaining = response.headers.get('X-RateLimit-Remaining');
-              if (remaining && parseInt(remaining) < 50) {
-                setRateLimitWarning(`Approaching rate limit: ${remaining} requests remaining`);
-              }
-              
-              if (response.status === 429) {
-                rateLimitHit = true;
-                setRateLimitWarning('Rate limit exceeded. Showing partial results.');
-                return { userId, isEnabled: false };
-              }
-              
-              if (response.status === 404) {
-                setRateLimitWarning(`Flag '${flagKey}' not found. Create it in your dashboard to see the rollout visualization.`);
-                return { userId, isEnabled: false };
-              }
-              
-              if (!response.ok) {
-                console.error(`HTTP error! status: ${response.status}`);
-                return { userId, isEnabled: false };
-              }
-              
-              const data = await response.json();
-              return { userId, isEnabled: data.enabled };
+              console.log(`User ${userId}: ${isEnabled}`);
+              return { userId, isEnabled };
             } catch (error) {
               console.error(`Error checking flag for ${userId}:`, error);
+              // Check if it's a rate limit error
+              if (error instanceof Error && error.message.includes('429')) {
+                rateLimitHit = true;
+                setRateLimitWarning('Rate limit exceeded. Showing partial results.');
+              } else if (error instanceof Error && error.message.includes('404')) {
+                setRateLimitWarning(`Flag '${flagKey}' not found. Create it in your dashboard to see the rollout visualization.`);
+              }
               return { userId, isEnabled: false };
             }
           })
@@ -230,8 +210,8 @@ export default function RolloutDemo() {
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Percentage Rollout</h1>
-        <p className="text-lg text-gray-600">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Percentage Rollout</h1>
+        <p className="text-lg text-gray-600 dark:text-gray-300">
           Visualize how percentage rollouts affect 900 simulated users
         </p>
       </div>
@@ -245,7 +225,7 @@ export default function RolloutDemo() {
       <FeatureDemo
         title="Rollout Visualization"
         description="900 users in a 30x30 grid showing rollout distribution"
-        info="This demo respects API rate limits (1,000 requests/minute). Manual refresh is recommended to avoid hitting limits."
+        info="This demo uses the FlagVault SDK with user context and cache disabled for real-time rollout behavior. Each user gets consistent results based on their ID."
       >
         <div className="space-y-6">
           <div className="flex items-center justify-between">
@@ -278,41 +258,41 @@ export default function RolloutDemo() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-6">
-            <div className="bg-blue-50 p-4 rounded-lg">
+            <div className="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg">
               <div className="flex items-center space-x-2 mb-2">
-                <Users className="h-5 w-5 text-blue-600" />
-                <span className="text-sm font-medium text-gray-700">Total Users</span>
+                <Users className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Total Users</span>
               </div>
-              <p className="text-2xl font-bold text-blue-600">{users.length.toLocaleString()}</p>
+              <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{users.length.toLocaleString()}</p>
             </div>
             
-            <div className="bg-green-50 p-4 rounded-lg">
+            <div className="bg-green-50 dark:bg-green-900/30 p-4 rounded-lg">
               <div className="flex items-center space-x-2 mb-2">
-                <TrendingUp className="h-5 w-5 text-green-600" />
-                <span className="text-sm font-medium text-gray-700">Enabled Users</span>
+                <TrendingUp className="h-5 w-5 text-green-600 dark:text-green-400" />
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Enabled Users</span>
               </div>
-              <p className="text-2xl font-bold text-green-600">{enabledCount.toLocaleString()}</p>
+              <p className="text-2xl font-bold text-green-600 dark:text-green-400">{enabledCount.toLocaleString()}</p>
             </div>
             
-            <div className="bg-purple-50 p-4 rounded-lg">
+            <div className="bg-purple-50 dark:bg-purple-900/30 p-4 rounded-lg">
               <div className="flex items-center space-x-2 mb-2">
-                <TrendingUp className="h-5 w-5 text-purple-600" />
-                <span className="text-sm font-medium text-gray-700">Percentage</span>
+                <TrendingUp className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Percentage</span>
               </div>
-              <p className="text-2xl font-bold text-purple-600">{enabledPercentage}%</p>
+              <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">{enabledPercentage}%</p>
             </div>
             
-            <div className="bg-gray-50 p-4 rounded-lg">
+            <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
               <div className="flex items-center space-x-2 mb-2">
-                <Users className="h-5 w-5 text-gray-600" />
-                <span className="text-sm font-medium text-gray-700">Disabled Users</span>
+                <Users className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Disabled Users</span>
               </div>
-              <p className="text-2xl font-bold text-gray-600">{(users.length - enabledCount).toLocaleString()}</p>
+              <p className="text-2xl font-bold text-gray-600 dark:text-gray-400">{(users.length - enabledCount).toLocaleString()}</p>
             </div>
           </div>
 
           {rateLimitWarning && (
-            <div className="flex items-center space-x-2 p-3 bg-yellow-50 text-yellow-800 rounded-lg">
+            <div className="flex items-center space-x-2 p-3 bg-yellow-50 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 rounded-lg">
               <AlertTriangle className="h-5 w-5 flex-shrink-0" />
               <span className="text-sm">{rateLimitWarning}</span>
             </div>
@@ -333,44 +313,44 @@ export default function RolloutDemo() {
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-3">
-            <h4 className="font-medium text-gray-900">Consistent Distribution</h4>
-            <ul className="space-y-2 text-sm text-gray-600">
+            <h4 className="font-medium text-gray-900 dark:text-white">Consistent Distribution</h4>
+            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
               <li className="flex items-start">
-                <span className="text-blue-600 mr-2">•</span>
+                <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
                 Each user ID is hashed with the flag key and rollout seed
               </li>
               <li className="flex items-start">
-                <span className="text-blue-600 mr-2">•</span>
+                <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
                 Hash result determines if user is in rollout percentage
               </li>
               <li className="flex items-start">
-                <span className="text-blue-600 mr-2">•</span>
+                <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
                 Same user always gets same result (deterministic)
               </li>
               <li className="flex items-start">
-                <span className="text-blue-600 mr-2">•</span>
+                <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
                 Distribution is evenly spread across user base
               </li>
             </ul>
           </div>
           
           <div className="space-y-3">
-            <h4 className="font-medium text-gray-900">Rollout Benefits</h4>
-            <ul className="space-y-2 text-sm text-gray-600">
+            <h4 className="font-medium text-gray-900 dark:text-white">Rollout Benefits</h4>
+            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
               <li className="flex items-start">
-                <span className="text-green-600 mr-2">•</span>
+                <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                 Gradual feature release reduces risk
               </li>
               <li className="flex items-start">
-                <span className="text-green-600 mr-2">•</span>
+                <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                 Monitor performance impact with small groups
               </li>
               <li className="flex items-start">
-                <span className="text-green-600 mr-2">•</span>
+                <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                 Easy to increase percentage over time
               </li>
               <li className="flex items-start">
-                <span className="text-green-600 mr-2">•</span>
+                <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                 Instant rollback if issues are detected
               </li>
             </ul>
@@ -400,26 +380,26 @@ export default function RolloutDemo() {
         title="Rollout Strategy"
         description="Best practices for percentage rollouts"
       >
-        <ol className="space-y-3 text-sm text-gray-600">
+        <ol className="space-y-3 text-sm text-gray-600 dark:text-gray-300">
           <li className="flex items-start">
-            <span className="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center text-xs font-medium mr-3">1</span>
-            <span><strong>Start Small:</strong> Begin with 1-5% of users to validate the feature</span>
+            <span className="flex-shrink-0 w-6 h-6 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-full flex items-center justify-center text-xs font-medium mr-3">1</span>
+            <span><strong className="dark:text-white">Start Small:</strong> Begin with 1-5% of users to validate the feature</span>
           </li>
           <li className="flex items-start">
-            <span className="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center text-xs font-medium mr-3">2</span>
-            <span><strong>Monitor Metrics:</strong> Watch performance, errors, and user feedback</span>
+            <span className="flex-shrink-0 w-6 h-6 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-full flex items-center justify-center text-xs font-medium mr-3">2</span>
+            <span><strong className="dark:text-white">Monitor Metrics:</strong> Watch performance, errors, and user feedback</span>
           </li>
           <li className="flex items-start">
-            <span className="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center text-xs font-medium mr-3">3</span>
-            <span><strong>Gradual Increase:</strong> Expand to 10%, 25%, 50%, 75%, 100% over time</span>
+            <span className="flex-shrink-0 w-6 h-6 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-full flex items-center justify-center text-xs font-medium mr-3">3</span>
+            <span><strong className="dark:text-white">Gradual Increase:</strong> Expand to 10%, 25%, 50%, 75%, 100% over time</span>
           </li>
           <li className="flex items-start">
-            <span className="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center text-xs font-medium mr-3">4</span>
-            <span><strong>Quick Rollback:</strong> Reduce percentage immediately if issues arise</span>
+            <span className="flex-shrink-0 w-6 h-6 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-full flex items-center justify-center text-xs font-medium mr-3">4</span>
+            <span><strong className="dark:text-white">Quick Rollback:</strong> Reduce percentage immediately if issues arise</span>
           </li>
           <li className="flex items-start">
-            <span className="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center text-xs font-medium mr-3">5</span>
-            <span><strong>Full Release:</strong> Set to 100% when confident, then remove flag</span>
+            <span className="flex-shrink-0 w-6 h-6 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-full flex items-center justify-center text-xs font-medium mr-3">5</span>
+            <span><strong className="dark:text-white">Full Release:</strong> Set to 100% when confident, then remove flag</span>
           </li>
         </ol>
       </FeatureDemo>

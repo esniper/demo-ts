@@ -63,10 +63,10 @@ function HookDemo({ hookType, flagKey, cacheTTL }: {
   
   if (!sdk) {
     return (
-      <div className="p-4 bg-gray-50 rounded-lg">
+      <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
         <div className="flex items-center space-x-2">
           <XCircle className="h-5 w-5 text-red-500" />
-          <span className="text-sm text-gray-600">SDK not initialized</span>
+          <span className="text-sm text-gray-600 dark:text-gray-300">SDK not initialized</span>
         </div>
       </div>
     );
@@ -81,14 +81,14 @@ function HookDemo({ hookType, flagKey, cacheTTL }: {
     );
 
     return (
-      <div className="p-4 bg-gray-50 rounded-lg">
+      <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-gray-900">
+          <span className="text-sm font-medium text-gray-900 dark:text-white">
             Flag: {flagKey}
           </span>
           <div className="flex items-center space-x-2">
-            <Database className="h-4 w-4 text-blue-500" />
-            <span className="text-xs text-blue-600">Cached</span>
+            <Database className="h-4 w-4 text-blue-500 dark:text-blue-400" />
+            <span className="text-xs text-blue-600 dark:text-blue-400">Cached</span>
           </div>
         </div>
         <div className="flex items-center space-x-2">
@@ -100,13 +100,13 @@ function HookDemo({ hookType, flagKey, cacheTTL }: {
             <XCircle className="h-5 w-5 text-red-500" />
           )}
           <span className={`text-sm font-medium ${
-            isLoading ? 'text-gray-500' : isEnabled ? 'text-green-700' : 'text-red-700'
+            isLoading ? 'text-gray-500 dark:text-gray-400' : isEnabled ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'
           }`}>
             {isLoading ? 'Loading...' : isEnabled ? 'Enabled' : 'Disabled'}
           </span>
         </div>
         {error && (
-          <p className="mt-2 text-xs text-red-600">Error: {error.message}</p>
+          <p className="mt-2 text-xs text-red-600 dark:text-red-400">Error: {error.message}</p>
         )}
       </div>
     );
@@ -115,14 +115,14 @@ function HookDemo({ hookType, flagKey, cacheTTL }: {
   const { isEnabled, isLoading, error } = useFeatureFlag(sdk, flagKey, false);
 
   return (
-    <div className="p-4 bg-gray-50 rounded-lg">
+    <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-medium text-gray-900">
+        <span className="text-sm font-medium text-gray-900 dark:text-white">
           Flag: {flagKey}
         </span>
         <div className="flex items-center space-x-2">
-          <Timer className="h-4 w-4 text-gray-500" />
-          <span className="text-xs text-gray-600">Real-time</span>
+          <Timer className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+          <span className="text-xs text-gray-600 dark:text-gray-400">Real-time</span>
         </div>
       </div>
       <div className="flex items-center space-x-2">
@@ -134,13 +134,13 @@ function HookDemo({ hookType, flagKey, cacheTTL }: {
           <XCircle className="h-5 w-5 text-red-500" />
         )}
         <span className={`text-sm font-medium ${
-          isLoading ? 'text-gray-500' : isEnabled ? 'text-green-700' : 'text-red-700'
+          isLoading ? 'text-gray-500 dark:text-gray-400' : isEnabled ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'
         }`}>
           {isLoading ? 'Loading...' : isEnabled ? 'Enabled' : 'Disabled'}
         </span>
       </div>
       {error && (
-        <p className="mt-2 text-xs text-red-600">Error: {error.message}</p>
+        <p className="mt-2 text-xs text-red-600 dark:text-red-400">Error: {error.message}</p>
       )}
     </div>
   );
@@ -152,8 +152,8 @@ export default function HooksDemo() {
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">React Hooks</h1>
-        <p className="text-lg text-gray-600">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">React Hooks</h1>
+        <p className="text-lg text-gray-600 dark:text-gray-300">
           Use React hooks for seamless feature flag integration
         </p>
       </div>
@@ -193,7 +193,7 @@ export default function HooksDemo() {
               value={customFlag}
               onChange={(e) => setCustomFlag(e.target.value)}
               placeholder="Enter flag key"
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
             />
           </div>
           {customFlag && <HookDemo hookType="basic" flagKey={customFlag} />}
@@ -229,8 +229,8 @@ export default function HooksDemo() {
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-3">
-            <h4 className="font-medium text-gray-900">useFeatureFlag</h4>
-            <ul className="space-y-2 text-sm text-gray-600">
+            <h4 className="font-medium text-gray-900 dark:text-white">useFeatureFlag</h4>
+            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
               <li className="flex items-start">
                 <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 mr-2 flex-shrink-0" />
                 Real-time updates when flags change
@@ -250,8 +250,8 @@ export default function HooksDemo() {
             </ul>
           </div>
           <div className="space-y-3">
-            <h4 className="font-medium text-gray-900">useFeatureFlagCached</h4>
-            <ul className="space-y-2 text-sm text-gray-600">
+            <h4 className="font-medium text-gray-900 dark:text-white">useFeatureFlagCached</h4>
+            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
               <li className="flex items-start">
                 <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 mr-2 flex-shrink-0" />
                 Configurable cache TTL

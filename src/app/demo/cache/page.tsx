@@ -86,8 +86,8 @@ export default function CacheDemo() {
   if (!sdk) {
     return (
       <div className="max-w-4xl mx-auto">
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-          <p className="text-yellow-800">SDK not initialized. Please configure your API keys.</p>
+        <div className="bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700 rounded-lg p-4">
+          <p className="text-yellow-800 dark:text-yellow-300">SDK not initialized. Please configure your API keys.</p>
         </div>
       </div>
     );
@@ -96,8 +96,8 @@ export default function CacheDemo() {
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Cache Management</h1>
-        <p className="text-lg text-gray-600">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Cache Management</h1>
+        <p className="text-lg text-gray-600 dark:text-gray-300">
           Monitor and manage FlagVault SDK caching for optimal performance
         </p>
       </div>

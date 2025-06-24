@@ -59,8 +59,8 @@ export function FlagStatus({ flagKey, showDetails = false, defaultValue = false 
   if (isLoading) {
     return (
       <div className="flex items-center space-x-2">
-        <Loader2 className="h-5 w-5 text-gray-400 animate-spin" />
-        <span className="text-sm text-gray-500">Checking...</span>
+        <Loader2 className="h-5 w-5 text-gray-400 dark:text-gray-500 animate-spin" />
+        <span className="text-sm text-gray-500 dark:text-gray-400">Checking...</span>
       </div>
     );
   }
@@ -68,8 +68,8 @@ export function FlagStatus({ flagKey, showDetails = false, defaultValue = false 
   if (error) {
     return (
       <div className="flex items-center space-x-2">
-        <AlertCircle className="h-5 w-5 text-yellow-500" />
-        <span className="text-sm text-gray-600">Error: {error}</span>
+        <AlertCircle className="h-5 w-5 text-yellow-500 dark:text-yellow-400" />
+        <span className="text-sm text-gray-600 dark:text-gray-300">Error: {error}</span>
       </div>
     );
   }
@@ -82,11 +82,11 @@ export function FlagStatus({ flagKey, showDetails = false, defaultValue = false 
         <XCircle className="h-5 w-5 text-red-500" />
       )}
       <div>
-        <span className={`text-sm font-medium ${isEnabled ? 'text-green-700' : 'text-red-700'}`}>
+        <span className={`text-sm font-medium ${isEnabled ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'}`}>
           {isEnabled ? 'Enabled' : 'Disabled'}
         </span>
         {showDetails && (
-          <p className="text-xs text-gray-500 mt-0.5">
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
             Flag: {flagKey}
           </p>
         )}
