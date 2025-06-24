@@ -25,8 +25,3 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Custom grid for 30x30 user visualization */
-.grid-cols-30 {
-  display: grid;
-  grid-template-columns: repeat(30, minmax(0, 1fr));
-}

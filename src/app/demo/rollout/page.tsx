@@ -73,11 +73,19 @@ function UserGrid({ users, enabledUsers, isLoading, progress }: UserGridProps) {
         </div>
       )}
       
-      <div className="grid grid-cols-30 gap-0 p-4 bg-gray-50 rounded-lg overflow-hidden">
+      <div 
+        className="grid gap-0.5 p-4 bg-gray-50 rounded-lg overflow-hidden"
+        style={{ 
+          display: 'grid',
+          gridTemplateColumns: 'repeat(30, minmax(0, 1fr))',
+          width: 'fit-content',
+          margin: '0 auto'
+        }}
+      >
         {users.map((userId) => (
           <div
             key={userId}
-            className={`w-2 h-2 ${
+            className={`w-3 h-3 rounded-sm ${
               enabledUsers.has(userId) 
                 ? 'bg-green-500' 
                 : 'bg-gray-300'
@@ -91,11 +99,11 @@ function UserGrid({ users, enabledUsers, isLoading, progress }: UserGridProps) {
         <span>Each dot represents a user</span>
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-1">
-            <div className="w-2 h-2 bg-green-500 rounded"></div>
+            <div className="w-3 h-3 bg-green-500 rounded-sm"></div>
             <span>Enabled</span>
           </div>
           <div className="flex items-center space-x-1">
-            <div className="w-2 h-2 bg-gray-300 rounded"></div>
+            <div className="w-3 h-3 bg-gray-300 rounded-sm"></div>
             <span>Disabled</span>
           </div>
         </div>
