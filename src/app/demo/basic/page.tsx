@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { FeatureDemo } from '@/components/FeatureDemo';
-import { FlagStatus } from '@/components/FlagStatus';
-import { CacheAwareFlagStatus } from '@/components/CacheAwareFlagStatus';
-import { CodeExample } from '@/components/CodeExample';
-import { useFlagVault } from '@/contexts/FlagVaultContext';
-import { RefreshCw, Clock, Zap } from 'lucide-react';
+import React, { useState } from "react";
+import { FeatureDemo } from "@/components/FeatureDemo";
+import { FlagStatus } from "@/components/FlagStatus";
+import { CacheAwareFlagStatus } from "@/components/CacheAwareFlagStatus";
+import { CodeExample } from "@/components/CodeExample";
+import { useFlagVault } from "@/contexts/FlagVaultContext";
+import { RefreshCw, Clock, Zap } from "lucide-react";
 
 const cachedFlagCode = `import FlagVaultSDK from '@flagvault/sdk';
 
@@ -63,19 +63,21 @@ const isEnabled = await sdk.isEnabled('my-feature-flag', false);
 
 export default function BasicDemo() {
   const { sdk } = useFlagVault();
-  const [customFlagKey, setCustomFlagKey] = useState('');
-  const [customFlagStatus, setCustomFlagStatus] = useState<boolean | null>(null);
+  const [customFlagKey, setCustomFlagKey] = useState("");
+  const [customFlagStatus, setCustomFlagStatus] = useState<boolean | null>(
+    null,
+  );
   const [isChecking, setIsChecking] = useState(false);
 
   const checkCustomFlag = async () => {
     if (!sdk || !customFlagKey) return;
-    
+
     setIsChecking(true);
     try {
       const isEnabled = await sdk.isEnabled(customFlagKey, false);
       setCustomFlagStatus(isEnabled);
     } catch (error) {
-      console.error('Error checking flag:', error);
+      console.error("Error checking flag:", error);
       setCustomFlagStatus(false);
     } finally {
       setIsChecking(false);
@@ -85,7 +87,9 @@ export default function BasicDemo() {
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Basic Feature Flags</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          Basic Feature Flags
+        </h1>
         <p className="text-lg text-gray-600 dark:text-gray-300">
           Learn how to use simple on/off feature toggles with FlagVault SDK
         </p>
@@ -101,23 +105,39 @@ export default function BasicDemo() {
           <div className="space-y-4">
             <div className="flex items-center space-x-2 mb-4">
               <Clock className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Cached Flags</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                Cached Flags
+              </h3>
               <div className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-full text-xs font-medium">
                 5 min TTL
               </div>
             </div>
             <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg text-sm text-blue-800 dark:text-blue-300 mb-4">
-              <strong>These flags are cached:</strong> Changes in your dashboard may take up to 5 minutes to reflect here. This improves performance but reduces real-time accuracy.
+              <strong>These flags are cached:</strong> Changes in your dashboard
+              may take up to 5 minutes to reflect here. This improves
+              performance but reduces real-time accuracy.
             </div>
-            
+
             <div className="space-y-3">
               <div className="p-4 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg">
-                <h4 className="font-medium text-gray-900 dark:text-white mb-3">demo-feature</h4>
-                <CacheAwareFlagStatus flagKey="demo-feature" cached={true} showDetails />
+                <h4 className="font-medium text-gray-900 dark:text-white mb-3">
+                  demo-feature
+                </h4>
+                <CacheAwareFlagStatus
+                  flagKey="demo-feature"
+                  cached={true}
+                  showDetails
+                />
               </div>
               <div className="p-4 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg">
-                <h4 className="font-medium text-gray-900 dark:text-white mb-3">beta-features</h4>
-                <CacheAwareFlagStatus flagKey="beta-features" cached={true} showDetails />
+                <h4 className="font-medium text-gray-900 dark:text-white mb-3">
+                  beta-features
+                </h4>
+                <CacheAwareFlagStatus
+                  flagKey="beta-features"
+                  cached={true}
+                  showDetails
+                />
               </div>
             </div>
           </div>
@@ -126,23 +146,31 @@ export default function BasicDemo() {
           <div className="space-y-4">
             <div className="flex items-center space-x-2 mb-4">
               <Zap className="h-5 w-5 text-green-600 dark:text-green-400" />
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Real-time Flags</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                Real-time Flags
+              </h3>
               <div className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded-full text-xs font-medium">
                 No Cache
               </div>
             </div>
             <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg text-sm text-green-800 dark:text-green-300 mb-4">
-              <strong>These flags update immediately:</strong> Changes in your dashboard will reflect within seconds. This provides real-time accuracy but may be slower.
+              <strong>These flags update immediately:</strong> Changes in your
+              dashboard will reflect within seconds. This provides real-time
+              accuracy but may be slower.
             </div>
-            
+
             <div className="space-y-3">
               <div className="p-4 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg">
-                <h4 className="font-medium text-gray-900 dark:text-white mb-3">new-ui-design</h4>
-                <CacheAwareFlagStatus flagKey="new-ui-design" cached={false} showDetails />
+                <h4 className="font-medium text-gray-900 dark:text-white mb-3">
+                  new-ui-design
+                </h4>
+                <FlagStatus flagKey="new-ui-design" showDetails />
               </div>
               <div className="p-4 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg">
-                <h4 className="font-medium text-gray-900 dark:text-white mb-3">maintenance-mode</h4>
-                <CacheAwareFlagStatus flagKey="maintenance-mode" cached={false} showDetails />
+                <h4 className="font-medium text-gray-900 dark:text-white mb-3">
+                  maintenance-mode
+                </h4>
+                <FlagStatus flagKey="maintenance-mode" showDetails />
               </div>
             </div>
           </div>
@@ -150,10 +178,14 @@ export default function BasicDemo() {
 
         {/* Cache Strategy Explanation */}
         <div className="mt-8 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-          <h4 className="font-medium text-gray-900 dark:text-white mb-3">When to Use Each Strategy</h4>
+          <h4 className="font-medium text-gray-900 dark:text-white mb-3">
+            When to Use Each Strategy
+          </h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
             <div>
-              <h5 className="font-medium text-blue-700 dark:text-blue-400 mb-2">✅ Use Cached Flags For:</h5>
+              <h5 className="font-medium text-blue-700 dark:text-blue-400 mb-2">
+                ✅ Use Cached Flags For:
+              </h5>
               <ul className="space-y-1 text-gray-600 dark:text-gray-300">
                 <li>• High-traffic features</li>
                 <li>• Performance-critical code paths</li>
@@ -162,7 +194,9 @@ export default function BasicDemo() {
               </ul>
             </div>
             <div>
-              <h5 className="font-medium text-green-700 dark:text-green-400 mb-2">⚡ Use Real-time Flags For:</h5>
+              <h5 className="font-medium text-green-700 dark:text-green-400 mb-2">
+                ⚡ Use Real-time Flags For:
+              </h5>
               <ul className="space-y-1 text-gray-600 dark:text-gray-300">
                 <li>• Emergency kill switches</li>
                 <li>• Security-related features</li>
@@ -199,9 +233,19 @@ export default function BasicDemo() {
           {customFlagStatus !== null && customFlagKey && (
             <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
               <p className="text-sm text-gray-600 dark:text-gray-300">
-                Flag <code className="bg-white dark:bg-gray-700 dark:text-gray-300 px-2 py-1 rounded">{customFlagKey}</code> is{' '}
-                <span className={`font-medium ${customFlagStatus ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'}`}>
-                  {customFlagStatus ? 'enabled' : 'disabled'}
+                Flag{" "}
+                <code className="bg-white dark:bg-gray-700 dark:text-gray-300 px-2 py-1 rounded">
+                  {customFlagKey}
+                </code>{" "}
+                is{" "}
+                <span
+                  className={`font-medium ${
+                    customFlagStatus
+                      ? "text-green-700 dark:text-green-400"
+                      : "text-red-700 dark:text-red-400"
+                  }`}
+                >
+                  {customFlagStatus ? "enabled" : "disabled"}
                 </span>
               </p>
             </div>
@@ -238,20 +282,42 @@ export default function BasicDemo() {
       >
         <ol className="space-y-3 text-sm text-gray-600 dark:text-gray-300">
           <li className="flex items-start">
-            <span className="flex-shrink-0 w-6 h-6 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-full flex items-center justify-center text-xs font-medium mr-3">1</span>
-            <span>SDK makes a GET request to <code className="bg-gray-100 dark:bg-gray-700 dark:text-gray-300 px-2 py-1 rounded font-mono">https://api.flagvault.com/api/feature-flag/{'{flag-key}'}/enabled</code></span>
+            <span className="flex-shrink-0 w-6 h-6 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-full flex items-center justify-center text-xs font-medium mr-3">
+              1
+            </span>
+            <span>
+              SDK makes a GET request to{" "}
+              <code className="bg-gray-100 dark:bg-gray-700 dark:text-gray-300 px-2 py-1 rounded font-mono">
+                https://api.flagvault.com/api/feature-flag/{"{flag-key}"}
+                /enabled
+              </code>
+            </span>
           </li>
           <li className="flex items-start">
-            <span className="flex-shrink-0 w-6 h-6 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-full flex items-center justify-center text-xs font-medium mr-3">2</span>
-            <span>API validates your credentials and checks the flag status in the selected environment</span>
+            <span className="flex-shrink-0 w-6 h-6 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-full flex items-center justify-center text-xs font-medium mr-3">
+              2
+            </span>
+            <span>
+              API validates your credentials and checks the flag status in the
+              selected environment
+            </span>
           </li>
           <li className="flex items-start">
-            <span className="flex-shrink-0 w-6 h-6 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-full flex items-center justify-center text-xs font-medium mr-3">3</span>
-            <span>Returns a boolean value indicating if the flag is enabled</span>
+            <span className="flex-shrink-0 w-6 h-6 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-full flex items-center justify-center text-xs font-medium mr-3">
+              3
+            </span>
+            <span>
+              Returns a boolean value indicating if the flag is enabled
+            </span>
           </li>
           <li className="flex items-start">
-            <span className="flex-shrink-0 w-6 h-6 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-full flex items-center justify-center text-xs font-medium mr-3">4</span>
-            <span>On error, returns the default value you specified (graceful degradation)</span>
+            <span className="flex-shrink-0 w-6 h-6 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-full flex items-center justify-center text-xs font-medium mr-3">
+              4
+            </span>
+            <span>
+              On error, returns the default value you specified (graceful
+              degradation)
+            </span>
           </li>
         </ol>
       </FeatureDemo>
