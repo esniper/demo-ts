@@ -142,10 +142,10 @@ export default function RolloutDemo() {
         const batchResults = await Promise.all(
           batch.map(async (userId) => {
             try {
-              // Use SDK with user context for consistent rollout (no cache for real-time results)
+              // Use SDK with user context for consistent rollout
               const isEnabled = await measureAsync(
                 `flag-check-${userId}`,
-                () => sdk.isEnabled(flagKey, false, userId, { cache: false })
+                () => sdk.isEnabled(flagKey, false, userId)
               );
               console.log(`User ${userId}: ${isEnabled}`);
               return { userId, isEnabled };

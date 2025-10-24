@@ -227,23 +227,23 @@ export default function PerformanceDemo() {
                     label={{ value: 'Response Time (ms)', angle: -90, position: 'insideLeft' }} 
                   />
                   <Tooltip
-                    formatter={(value: number, name: string, props: { payload: { cached: boolean } }) => [
+                    formatter={(value: number, name: string, props?: { payload?: { cached?: boolean } }) => [
                       `${value.toFixed(2)}ms`,
-                      props.payload.cached ? 'Cached' : 'Uncached'
+                      props?.payload?.cached ? 'Cached' : 'Uncached'
                     ]}
                     labelFormatter={(index: number) => `Request ${index}`}
                   />
-                  <Line 
-                    type="monotone" 
-                    dataKey="responseTime" 
-                    stroke="#3b82f6" 
+                  <Line
+                    type="monotone"
+                    dataKey="responseTime"
+                    stroke="#3b82f6"
                     strokeWidth={2}
-                    dot={(props: { cx: number; cy: number; payload: { cached: boolean } }) => (
-                      <circle 
-                        cx={props.cx} 
-                        cy={props.cy} 
-                        r={4} 
-                        fill={props.payload.cached ? '#10b981' : '#ef4444'} 
+                    dot={(props?: { cx?: number; cy?: number; payload?: { cached?: boolean } }) => (
+                      <circle
+                        cx={props?.cx || 0}
+                        cy={props?.cy || 0}
+                        r={4}
+                        fill={props?.payload?.cached ? '#10b981' : '#ef4444'}
                       />
                     )}
                   />
