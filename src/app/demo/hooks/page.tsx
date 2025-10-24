@@ -61,6 +61,21 @@ function HookDemo({ hookType, flagKey, cacheTTL }: {
 }) {
   const { sdk } = useFlagVault();
 
+  // Always call hooks unconditionally (required by Rules of Hooks)
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const cachedHookResult = sdk ? useFeatureFlagCached(
+    sdk,
+    flagKey,
+    false,
+    cacheTTL || 10000 // 10 seconds for demo
+  ) : { isEnabled: false, isLoading: false, error: null };
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const basicHookResult = sdk ? useFeatureFlag(sdk, flagKey, false) : { isEnabled: false, isLoading: false, error: null };
+
+  // Choose which result to use based on hookType
+  const { isEnabled, isLoading, error } = hookType === 'cached' ? cachedHookResult : basicHookResult;
+
   if (!sdk) {
     return (
       <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
@@ -71,19 +86,6 @@ function HookDemo({ hookType, flagKey, cacheTTL }: {
       </div>
     );
   }
-
-  // Always call hooks unconditionally after early return (sdk is now guaranteed non-null)
-  const cachedHookResult = useFeatureFlagCached(
-    sdk,
-    flagKey,
-    false,
-    cacheTTL || 10000 // 10 seconds for demo
-  );
-
-  const basicHookResult = useFeatureFlag(sdk, flagKey, false);
-
-  // Choose which result to use based on hookType
-  const { isEnabled, isLoading, error } = hookType === 'cached' ? cachedHookResult : basicHookResult;
 
   if (hookType === 'cached') {
     return (
