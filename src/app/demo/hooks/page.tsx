@@ -61,7 +61,18 @@ function HookDemo({ hookType, flagKey, cacheTTL }: {
 }) {
   const { sdk } = useFlagVault();
 
-  // Always call hooks unconditionally
+  if (!sdk) {
+    return (
+      <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+        <div className="flex items-center space-x-2">
+          <XCircle className="h-5 w-5 text-red-500" />
+          <span className="text-sm text-gray-600 dark:text-gray-300">SDK not initialized</span>
+        </div>
+      </div>
+    );
+  }
+
+  // Always call hooks unconditionally after early return (sdk is now guaranteed non-null)
   const cachedHookResult = useFeatureFlagCached(
     sdk,
     flagKey,
@@ -73,17 +84,6 @@ function HookDemo({ hookType, flagKey, cacheTTL }: {
 
   // Choose which result to use based on hookType
   const { isEnabled, isLoading, error } = hookType === 'cached' ? cachedHookResult : basicHookResult;
-
-  if (!sdk) {
-    return (
-      <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-        <div className="flex items-center space-x-2">
-          <XCircle className="h-5 w-5 text-red-500" />
-          <span className="text-sm text-gray-600 dark:text-gray-300">SDK not initialized</span>
-        </div>
-      </div>
-    );
-  }
 
   if (hookType === 'cached') {
     return (
