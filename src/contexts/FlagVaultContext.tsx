@@ -35,7 +35,7 @@ export const FlagVaultProvider: React.FC<{ children: ReactNode }> = ({ children 
         enabled: true,
         ttl: 300, // 5 minutes
         maxSize: 1000,
-        refreshInterval: 60, // 1 minute
+        refreshInterval: 0, // Disable automatic background refresh to avoid rate limiting
       },
     });
 
