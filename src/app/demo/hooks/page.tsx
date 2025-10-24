@@ -61,16 +61,17 @@ function HookDemo({ hookType, flagKey, cacheTTL }: {
 }) {
   const { sdk } = useFlagVault();
 
-  // Use hooks conditionally based on hookType
-  const cachedHookResult = hookType === 'cached' && sdk ? useFeatureFlagCached(
+  // Always call hooks unconditionally
+  const cachedHookResult = useFeatureFlagCached(
     sdk,
     flagKey,
     false,
     cacheTTL || 10000 // 10 seconds for demo
-  ) : { isEnabled: false, isLoading: false, error: null };
+  );
 
-  const basicHookResult = hookType === 'basic' && sdk ? useFeatureFlag(sdk, flagKey, false) : { isEnabled: false, isLoading: false, error: null };
+  const basicHookResult = useFeatureFlag(sdk, flagKey, false);
 
+  // Choose which result to use based on hookType
   const { isEnabled, isLoading, error } = hookType === 'cached' ? cachedHookResult : basicHookResult;
 
   if (!sdk) {

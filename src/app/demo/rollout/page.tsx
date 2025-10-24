@@ -201,6 +201,7 @@ export default function RolloutDemo() {
     if (sdk && flagKey) {
       checkRollout();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sdk, flagKey]);
 
   const enabledCount = enabledUsers.size;
