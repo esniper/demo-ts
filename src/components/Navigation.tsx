@@ -3,15 +3,12 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { 
-  Home, 
-  ToggleLeft, 
-  GitBranch, 
-  Code2, 
-  Database, 
-  AlertTriangle, 
-  Zap, 
-  Grid,
+import {
+  Home,
+  ToggleLeft,
+  GitBranch,
+  Code2,
+  AlertTriangle,
   TrendingUp
 } from 'lucide-react';
 

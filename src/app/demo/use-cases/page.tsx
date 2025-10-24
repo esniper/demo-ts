@@ -96,7 +96,7 @@ interface UseCaseDemo {
   id: string;
   title: string;
   description: string;
-  icon: React.ComponentType<any>;
+  icon: React.ComponentType<{ className?: string }>;
   flagKey: string;
   color: string;
   enabled: boolean;
@@ -177,7 +177,7 @@ export default function UseCasesDemo() {
           try {
             const enabled = await sdk.isEnabled(useCase.flagKey, false);
             return { ...useCase, enabled, isLoading: false };
-          } catch (error) {
+          } catch {
             return { ...useCase, enabled: false, isLoading: false };
           }
         })
@@ -392,7 +392,7 @@ export default function UseCasesDemo() {
             <h4 className="font-medium text-gray-900">Kill Switches</h4>
             <ul className="space-y-1 text-sm text-gray-600">
               <li>• Keep flag names simple and obvious</li>
-              <li>• Default to 'enabled' in normal operation</li>
+              <li>• Default to &apos;enabled&apos; in normal operation</li>
               <li>• Document emergency procedures</li>
               <li>• Test kill switches regularly</li>
             </ul>

@@ -54,13 +54,25 @@ function FastComponent() {
 }`;
 
 // Hook Demo Component
-function HookDemo({ hookType, flagKey, cacheTTL }: { 
+function HookDemo({ hookType, flagKey, cacheTTL }: {
   hookType: 'basic' | 'cached';
   flagKey: string;
   cacheTTL?: number;
 }) {
   const { sdk } = useFlagVault();
-  
+
+  // Use hooks conditionally based on hookType
+  const cachedHookResult = hookType === 'cached' && sdk ? useFeatureFlagCached(
+    sdk,
+    flagKey,
+    false,
+    cacheTTL || 10000 // 10 seconds for demo
+  ) : { isEnabled: false, isLoading: false, error: null };
+
+  const basicHookResult = hookType === 'basic' && sdk ? useFeatureFlag(sdk, flagKey, false) : { isEnabled: false, isLoading: false, error: null };
+
+  const { isEnabled, isLoading, error } = hookType === 'cached' ? cachedHookResult : basicHookResult;
+
   if (!sdk) {
     return (
       <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
@@ -73,13 +85,6 @@ function HookDemo({ hookType, flagKey, cacheTTL }: {
   }
 
   if (hookType === 'cached') {
-    const { isEnabled, isLoading, error } = useFeatureFlagCached(
-      sdk,
-      flagKey,
-      false,
-      cacheTTL || 10000 // 10 seconds for demo
-    );
-
     return (
       <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
         <div className="flex items-center justify-between mb-2">
@@ -111,8 +116,6 @@ function HookDemo({ hookType, flagKey, cacheTTL }: {
       </div>
     );
   }
-
-  const { isEnabled, isLoading, error } = useFeatureFlag(sdk, flagKey, false);
 
   return (
     <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">

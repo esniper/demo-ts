@@ -189,7 +189,7 @@ export default function BasicDemo() {
               <ul className="space-y-1 text-gray-600 dark:text-gray-300">
                 <li>• High-traffic features</li>
                 <li>• Performance-critical code paths</li>
-                <li>• Features that don't need instant updates</li>
+                <li>• Features that don&apos;t need instant updates</li>
                 <li>• Reduced API costs</li>
               </ul>
             </div>

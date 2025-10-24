@@ -7,7 +7,6 @@ import { PerformanceDebugger } from '@/components/PerformanceDebugger';
 import { useFlagVault } from '@/contexts/FlagVaultContext';
 import { usePerformanceMonitor } from '@/hooks/usePerformanceMonitor';
 import { Users, RefreshCw, TrendingUp, AlertTriangle } from 'lucide-react';
-import type { FeatureFlagMetadata } from '@flagvault/sdk';
 
 const rolloutCode = `// Percentage rollout with user context
 const userId = user.id; // Unique identifier for the user

@@ -242,7 +242,7 @@ export default function ErrorsDemo() {
                 <AlertTriangle className="h-5 w-5 text-orange-500 mt-0.5 flex-shrink-0" />
                 <div>
                   <p className="font-medium text-gray-900 dark:text-white">Missing Flags</p>
-                  <p className="text-gray-600 dark:text-gray-300">Flag doesn't exist in dashboard → Returns default value</p>
+                  <p className="text-gray-600 dark:text-gray-300">Flag doesn&apos;t exist in dashboard → Returns default value</p>
                 </div>
               </div>
               
@@ -333,7 +333,7 @@ export default function ErrorsDemo() {
             </ul>
           </div>
           <div className="space-y-3">
-            <h4 className="font-medium text-gray-900 dark:text-white">❌ Don't</h4>
+            <h4 className="font-medium text-gray-900 dark:text-white">❌ Don&apos;t</h4>
             <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
               <li className="flex items-start">
                 <span className="text-red-600 mr-2">•</span>

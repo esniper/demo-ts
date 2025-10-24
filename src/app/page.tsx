@@ -2,14 +2,11 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { 
-  ToggleLeft, 
-  GitBranch, 
-  Code2, 
-  Database, 
-  AlertTriangle, 
-  Zap, 
-  Grid,
+import {
+  ToggleLeft,
+  GitBranch,
+  Code2,
+  AlertTriangle,
   ArrowRight,
   TrendingUp
 } from 'lucide-react';
@@ -113,7 +110,7 @@ export default function Home() {
       <div className="mt-12 bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/20 dark:border-white/10 rounded-lg p-6 shadow-lg">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Getting Started</h2>
         <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-          To use this demo, you'll need to configure your FlagVault API keys in the <code className="bg-black/10 dark:bg-white/10 backdrop-blur-sm px-2 py-1 rounded border border-black/20 dark:border-white/20">.env.local</code> file:
+          To use this demo, you&apos;ll need to configure your FlagVault API keys in the <code className="bg-black/10 dark:bg-white/10 backdrop-blur-sm px-2 py-1 rounded border border-black/20 dark:border-white/20">.env.local</code> file:
         </p>
         <pre className="bg-black/5 dark:bg-white/5 backdrop-blur-sm border border-black/10 dark:border-white/10 rounded-md p-4 text-sm overflow-x-auto">
           <code className="text-gray-900 dark:text-gray-300">{`NEXT_PUBLIC_FLAGVAULT_TEST_API_KEY=test_your_api_key_here

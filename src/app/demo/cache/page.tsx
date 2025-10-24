@@ -37,8 +37,8 @@ console.log({
 
 export default function CacheDemo() {
   const { sdk } = useFlagVault();
-  const [stats, setStats] = useState<any>(null);
-  const [flagDebugInfo, setFlagDebugInfo] = useState<any[]>([]);
+  const [stats, setStats] = useState<{ size: number; hitRate: number; expiredEntries: number; memoryUsage: number } | null>(null);
+  const [flagDebugInfo, setFlagDebugInfo] = useState<Array<{ flag: string; cached: boolean; value?: boolean; cachedAt?: number; expiresAt?: number; timeUntilExpiry?: number }>>([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const refreshStats = () => {

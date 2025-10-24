@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FeatureDemo } from '@/components/FeatureDemo';
 import { CodeExample } from '@/components/CodeExample';
 import { useFlagVault } from '@/contexts/FlagVaultContext';
@@ -226,8 +226,8 @@ export default function PerformanceDemo() {
                   <YAxis 
                     label={{ value: 'Response Time (ms)', angle: -90, position: 'insideLeft' }} 
                   />
-                  <Tooltip 
-                    formatter={(value: number, name: string, props: any) => [
+                  <Tooltip
+                    formatter={(value: number, name: string, props: { payload: { cached: boolean } }) => [
                       `${value.toFixed(2)}ms`,
                       props.payload.cached ? 'Cached' : 'Uncached'
                     ]}
@@ -238,7 +238,7 @@ export default function PerformanceDemo() {
                     dataKey="responseTime" 
                     stroke="#3b82f6" 
                     strokeWidth={2}
-                    dot={(props: any) => (
+                    dot={(props: { cx: number; cy: number; payload: { cached: boolean } }) => (
                       <circle 
                         cx={props.cx} 
                         cy={props.cy} 
