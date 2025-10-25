@@ -9,11 +9,13 @@ import {
   GitBranch,
   Code2,
   AlertTriangle,
-  TrendingUp
+  TrendingUp,
+  Presentation
 } from 'lucide-react';
 
 const navItems = [
   { href: '/', label: 'Dashboard', icon: Home },
+  { href: '/demo/live-demo', label: 'Live Demo', icon: Presentation },
   { href: '/demo/basic', label: 'Basic Flags', icon: ToggleLeft },
   { href: '/demo/ab-testing', label: 'A/B Testing', icon: GitBranch },
   { href: '/demo/rollout', label: 'Percentage Rollout', icon: TrendingUp },
